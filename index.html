@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard ASAJ PAI Kelas 9</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; color: #1a1a1a; background: #f5f5f0; padding: 24px; }
+  .metric-card { background: #f0efea; border-radius: 8px; padding: 14px 16px; }
+  .metric-label { font-size: 12px; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric-value { font-size: 26px; font-weight: 500; }
+  .metric-sub { font-size: 12px; color: #666; margin-top: 2px; }
+  .section-title { font-size: 13px; font-weight: 500; color: #666; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .card { background: #fff; border: 0.5px solid rgba(0,0,0,0.15); border-radius: 12px; padding: 18px 20px; }
+  .tab-btn { padding: 6px 16px; font-size: 13px; border-radius: 8px; border: 0.5px solid rgba(0,0,0,0.3); background: transparent; color: #666; cursor: pointer; transition: all 0.15s; }
+  .tab-btn.active { background: #E6F1FB; color: #185FA5; border-color: transparent; font-weight: 500; }
+  .student-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+  .student-row:last-child { border-bottom: none; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 500; }
+  .badge-green { background: #EAF3DE; color: #3B6D11; }
+  .badge-red { background: #FCEBEB; color: #A32D2D; }
+  .badge-amber { background: #FAEEDA; color: #854F0B; }
+  .badge-blue { background: #E6F1FB; color: #185FA5; }
+  .bar-track { height: 8px; background: #f0efea; border-radius: 99px; overflow: hidden; flex: 1; }
+  .bar-fill { height: 100%; border-radius: 99px; }
+  .insight-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+  .insight-item:last-child { border-bottom: none; }
+  .insight-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  table { width: 100%; font-size: 13px; border-collapse: collapse; table-layout: fixed; }
+  th { text-align: left; padding: 8px 4px; font-weight: 500; color: #666; border-bottom: 0.5px solid rgba(0,0,0,0.3); }
+  td { padding: 10px 4px; }
+  tr:not(:last-child) td { border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+</style>
+</head>
+<body>
+
+<div style="padding: 1.5rem 0; max-width: 900px; margin: auto;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px;">
+    <div>
+      <div style="font-size: 18px; font-weight: 500;">Analisis ASAJ — PAI Kelas 9</div>
+      <div style="font-size: 13px; color: #666; margin-top: 2px;">Tahun Ajaran 2025/2026 · 18 Mei 2026 · 69 siswa</div>
+    </div>
+    <span class="badge badge-amber">KKM: 75</span>
+  </div>
+
+  <div class="grid-metrics">
+    <div class="metric-card">
+      <div class="metric-label">Rata-rata keseluruhan</div>
+      <div class="metric-value">66,9</div>
+      <div class="metric-sub">dari 100 poin</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Siswa tuntas</div>
+      <div class="metric-value" style="color:#3B6D11;">31</div>
+      <div class="metric-sub">44,9% dari 69 siswa</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Siswa belum tuntas</div>
+      <div class="metric-value" style="color:#A32D2D;">38</div>
+      <div class="metric-sub">55,1% perlu remedial</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Skor tertinggi</div>
+      <div class="metric-value">96</div>
+      <div class="metric-sub">Lingga M. Alwi · 9B</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Skor terendah</div>
+      <div class="metric-value" style="color:#A32D2D;">19</div>
+      <div class="metric-sub">Kurniawan Juliana · 9A</div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap;">
+    <button class="tab-btn active" onclick="showTab('overview', this)">Ringkasan Kelas</button>
+    <button class="tab-btn" onclick="showTab('distribution', this)">Distribusi Nilai</button>
+    <button class="tab-btn" onclick="showTab('topbottom', this)">Siswa Terbaik & Perhatian</button>
+    <button class="tab-btn" onclick="showTab('insights', this)">Rekomendasi Strategis</button>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div id="tab-overview" class="tab-content active">
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title">Perbandingan rata-rata kelas</div>
+        <div style="position: relative; height: 200px;">
+          <canvas id="avgChart" role="img" aria-label="Bar chart rata-rata nilai per kelas">9A: 70.0, 9B: 61.7, 9C: 68.7</canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Ketuntasan per kelas</div>
+        <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="font-size: 14px; font-weight: 500;">Kelas 9A</span>
+              <span style="font-size: 13px; color: #666;">13/24 · <strong style="color:#3B6D11;">54,2%</strong></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:54.2%; background:#639922;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="font-size: 14px; font-weight: 500;">Kelas 9B</span>
+              <span style="font-size: 13px; color: #666;">7/22 · <strong style="color:#A32D2D;">31,8%</strong></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:31.8%; background:#E24B4A;"></div></div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="font-size: 14px; font-weight: 500;">Kelas 9C</span>
+              <span style="font-size: 13px; color: #666;">11/23 · <strong style="color:#BA7517;">47,8%</strong></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:47.8%; background:#EF9F27;"></div></div>
+          </div>
+        </div>
+        <div style="margin-top: 16px; padding: 10px 12px; background: #f0efea; border-radius: 8px; font-size: 12px; color: #666;">
+          Kelas 9A unggul di ketuntasan. Kelas 9B memerlukan perhatian paling besar — hanya 7 dari 22 siswa mencapai KKM.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <div class="section-title">Statistik deskriptif per kelas</div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Kelas</th>
+              <th style="text-align:center;">Siswa</th>
+              <th style="text-align:center;">Rata-rata</th>
+              <th style="text-align:center;">Median</th>
+              <th style="text-align:center;">Std Dev</th>
+              <th style="text-align:center;">Min</th>
+              <th style="text-align:center;">Max</th>
+              <th style="text-align:center;">Tuntas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-blue">9A</span></td>
+              <td style="text-align:center;">24</td>
+              <td style="text-align:center; font-weight:500;">70,0</td>
+              <td style="text-align:center;">75,5</td>
+              <td style="text-align:center;">20,0</td>
+              <td style="text-align:center; color:#A32D2D;">19</td>
+              <td style="text-align:center; color:#3B6D11;">94</td>
+              <td style="text-align:center;"><span class="badge badge-green">54,2%</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red">9B</span></td>
+              <td style="text-align:center;">22</td>
+              <td style="text-align:center; font-weight:500;">61,7</td>
+              <td style="text-align:center;">60,0</td>
+              <td style="text-align:center;">20,5</td>
+              <td style="text-align:center; color:#A32D2D;">21</td>
+              <td style="text-align:center; color:#3B6D11;">96</td>
+              <td style="text-align:center;"><span class="badge badge-red">31,8%</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-amber">9C</span></td>
+              <td style="text-align:center;">23</td>
+              <td style="text-align:center; font-weight:500;">68,7</td>
+              <td style="text-align:center;">71,0</td>
+              <td style="text-align:center;">16,8</td>
+              <td style="text-align:center; color:#A32D2D;">31</td>
+              <td style="text-align:center; color:#3B6D11;">91</td>
+              <td style="text-align:center;"><span class="badge badge-amber">47,8%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: DISTRIBUSI -->
+  <div id="tab-distribution" class="tab-content">
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title">Distribusi kategori nilai keseluruhan</div>
+        <div style="position: relative; height: 220px;">
+          <canvas id="distChart" role="img" aria-label="Donut chart distribusi nilai">Sangat Baik 12, Baik 24, Cukup 15, Kurang 12, Sangat Kurang 6</canvas>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 12px; color: #666;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#639922;display:inline-block;"></span>Sangat Baik (85–100): 12</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#97C459;display:inline-block;"></span>Baik (70–84): 24</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#EF9F27;display:inline-block;"></span>Cukup (55–69): 15</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#E24B4A;display:inline-block;"></span>Kurang (40–54): 12</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#A32D2D;display:inline-block;"></span>Sangat Kurang (&lt;40): 6</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Distribusi per kelas (jumlah siswa)</div>
+        <div style="position: relative; height: 220px;">
+          <canvas id="stackedChart" role="img" aria-label="Stacked bar chart distribusi nilai per kelas">Distribusi nilai 9A, 9B, 9C per kategori</canvas>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 12px; color: #666;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#639922;display:inline-block;"></span>85–100</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#97C459;display:inline-block;"></span>70–84</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#EF9F27;display:inline-block;"></span>55–69</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#E24B4A;display:inline-block;"></span>40–54</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#A32D2D;display:inline-block;"></span>&lt;40</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 16px;">
+      <div class="section-title">Prediksi ketuntasan periode berikutnya</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+        <div style="padding: 14px; background: #f0efea; border-radius: 8px;">
+          <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Skenario remedial intensif (+10 poin rata-rata)</div>
+          <div style="font-size: 20px; font-weight: 500; color: #3B6D11;">~62%</div>
+          <div style="font-size: 11px; color: #666;">ketuntasan keseluruhan</div>
+        </div>
+        <div style="padding: 14px; background: #f0efea; border-radius: 8px;">
+          <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Skenario tanpa intervensi (status quo)</div>
+          <div style="font-size: 20px; font-weight: 500; color: #BA7517;">~45%</div>
+          <div style="font-size: 11px; color: #666;">ketuntasan keseluruhan</div>
+        </div>
+        <div style="padding: 14px; background: #f0efea; border-radius: 8px;">
+          <div style="font-size: 12px; color: #666; margin-bottom: 6px;">Target ideal sekolah</div>
+          <div style="font-size: 20px; font-weight: 500; color: #185FA5;">≥75%</div>
+          <div style="font-size: 11px; color: #666;">perlu program terstruktur</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: TOP & BOTTOM -->
+  <div id="tab-topbottom" class="tab-content">
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="color:#3B6D11;">10 siswa nilai tertinggi</div>
+        <div id="top10list"></div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="color:#A32D2D;">10 siswa perlu perhatian</div>
+        <div id="bot10list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: INSIGHTS -->
+  <div id="tab-insights" class="tab-content">
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title">Temuan utama</div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#FCEBEB;"><i class="ti ti-alert-circle" style="color:#A32D2D; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Mayoritas belum mencapai KKM</div>
+            <div style="font-size:12px; color:#666;">55,1% siswa (38 dari 69) belum tuntas. Kelas 9B paling kritis dengan hanya 31,8% ketuntasan.</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#FAEEDA;"><i class="ti ti-chart-bar" style="color:#854F0B; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Kesenjangan nilai sangat lebar</div>
+            <div style="font-size:12px; color:#666;">Rentang nilai 19–96 (standar deviasi ~19,2) menunjukkan kesenjangan kemampuan yang signifikan di dalam kelas.</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#E6F1FB;"><i class="ti ti-school" style="color:#185FA5; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">9A memimpin, 9C paling konsisten</div>
+            <div style="font-size:12px; color:#666;">9A memiliki rata-rata tertinggi (70,0), sementara 9C memiliki deviasi terkecil (16,8) — distribusi nilai paling merata.</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#EAF3DE;"><i class="ti ti-star" style="color:#3B6D11; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Potensi unggul ada di semua kelas</div>
+            <div style="font-size:12px; color:#666;">Setiap kelas memiliki siswa dengan skor ≥85. Ini menandakan metode pembelajaran berhasil untuk sebagian siswa.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Rekomendasi strategis</div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#FCEBEB;"><i class="ti ti-clipboard-list" style="color:#A32D2D; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Remedial segera untuk 9B</div>
+            <div style="font-size:12px; color:#666;">Prioritaskan program remedial terstruktur di kelas 9B. Identifikasi materi dengan kesalahan terbanyak dan lakukan pengayaan intensif.</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#FAEEDA;"><i class="ti ti-users" style="color:#854F0B; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Tutoring sebaya (peer learning)</div>
+            <div style="font-size:12px; color:#666;">Libatkan 12 siswa berprestasi tinggi (≥85) sebagai tutor sebaya untuk meningkatkan pemahaman kelompok menengah.</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#E6F1FB;"><i class="ti ti-target" style="color:#185FA5; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Bimbingan khusus untuk skor &lt;40</div>
+            <div style="font-size:12px; color:#666;">6 siswa dengan skor sangat kurang perlu asesmen diagnostik individual untuk mengidentifikasi hambatan belajar spesifik.</div>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon" style="background:#EAF3DE;"><i class="ti ti-presentation" style="color:#3B6D11; font-size:16px;"></i></div>
+          <div>
+            <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Replikasi praktik terbaik 9A & 9C</div>
+            <div style="font-size:12px; color:#666;">Lakukan sharing session antar guru kelas. Strategi pengajaran di 9A dan 9C yang berhasil perlu didokumentasikan dan direplikasi ke 9B.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const top10 = [
+  {name:'Lingga Mohamad Alwi', kelas:'9B', score:96},
+  {name:'Yuli Milannisa Putri', kelas:'9A', score:94},
+  {name:'Siska Karina Aprilia', kelas:'9A', score:92},
+  {name:'SYAKIRA KHANZA AULIA', kelas:'9A', score:91},
+  {name:'Muhamad Afrizal', kelas:'9C', score:91},
+  {name:'Nesta Ramdan Nugraha', kelas:'9C', score:91},
+  {name:'DESY NUR LUCYANSYAH', kelas:'9A', score:90},
+  {name:'Sandi Saputra', kelas:'9B', score:89},
+  {name:'Muhammad Rasya Alkhatiri', kelas:'9A', score:89},
+  {name:'Faisal Efendi', kelas:'9C', score:88}
+];
+const bot10 = [
+  {name:'Kurniawan Juliana', kelas:'9A', score:19},
+  {name:'RADIT ANDITA KATMANA', kelas:'9B', score:21},
+  {name:'Arif Rahmat Hakim', kelas:'9C', score:31},
+  {name:'RANGGA ADHITYA', kelas:'9C', score:31},
+  {name:'Giovani Askar Padilah', kelas:'9B', score:36},
+  {name:'Wawa Awaludin', kelas:'9B', score:37},
+  {name:'Farah Amanda', kelas:'9A', score:41},
+  {name:'Silsi Rosyida', kelas:'9A', score:41},
+  {name:'Keisya Khoirunnisa', kelas:'9B', score:42},
+  {name:'Doni Yudiansyah', kelas:'9A', score:43}
+];
+
+function kelasColor(k) {
+  return k === '9A' ? '#185FA5' : k === '9B' ? '#A32D2D' : '#854F0B';
+}
+function kelasColorBg(k) {
+  return k === '9A' ? '#E6F1FB' : k === '9B' ? '#FCEBEB' : '#FAEEDA';
+}
+
+const t10 = document.getElementById('top10list');
+top10.forEach((s, i) => {
+  t10.innerHTML += `<div class="student-row">
+    <span style="font-size:12px; color:#666; width:16px;">${i+1}</span>
+    <div style="flex:1; min-width:0;">
+      <div style="font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.name}</div>
+      <span style="font-size:11px; padding:1px 6px; border-radius:99px; background:${kelasColorBg(s.kelas)}; color:${kelasColor(s.kelas)};">${s.kelas}</span>
+    </div>
+    <span style="font-size:15px; font-weight:500; color:#3B6D11;">${s.score}</span>
+  </div>`;
+});
+
+const b10 = document.getElementById('bot10list');
+bot10.forEach((s, i) => {
+  b10.innerHTML += `<div class="student-row">
+    <span style="font-size:12px; color:#666; width:16px;">${i+1}</span>
+    <div style="flex:1; min-width:0;">
+      <div style="font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.name}</div>
+      <span style="font-size:11px; padding:1px 6px; border-radius:99px; background:${kelasColorBg(s.kelas)}; color:${kelasColor(s.kelas)};">${s.kelas}</span>
+    </div>
+    <span style="font-size:15px; font-weight:500; color:#A32D2D;">${s.score}</span>
+  </div>`;
+});
+
+new Chart(document.getElementById('avgChart'), {
+  type: 'bar',
+  data: {
+    labels: ['9A', '9B', '9C'],
+    datasets: [{
+      label: 'Rata-rata',
+      data: [70.0, 61.7, 68.7],
+      backgroundColor: ['#378ADD', '#E24B4A', '#EF9F27'],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 0, max: 100, grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('distChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Sangat Baik (85–100)','Baik (70–84)','Cukup (55–69)','Kurang (40–54)','Sangat Kurang (<40)'],
+    datasets: [{
+      data: [12, 24, 15, 12, 6],
+      backgroundColor: ['#639922','#97C459','#EF9F27','#E24B4A','#A32D2D'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    cutout: '60%'
+  }
+});
+
+new Chart(document.getElementById('stackedChart'), {
+  type: 'bar',
+  data: {
+    labels: ['9A', '9B', '9C'],
+    datasets: [
+      { label: '85–100', data: [6,3,3], backgroundColor: '#639922' },
+      { label: '70–84',  data: [9,5,10], backgroundColor: '#97C459' },
+      { label: '55–69',  data: [4,6,5],  backgroundColor: '#EF9F27' },
+      { label: '40–54',  data: [4,5,3],  backgroundColor: '#E24B4A' },
+      { label: '<40',    data: [1,3,2],  backgroundColor: '#A32D2D' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { stacked: true, grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, stepSize: 5 } }
+    }
+  }
+});
+
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
